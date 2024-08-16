@@ -25,6 +25,12 @@ taskipy = "^1.13.0"
 mypy = "^1.11.1"
 python-dotenv = "^1.0.1"
 
+
+[tool.poetry.group.jupyter-notebooks.dependencies]
+jupyter = "^1.0.0"
+notebook = "^7.2.1"
+ipykernel = "^6.29.5"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
