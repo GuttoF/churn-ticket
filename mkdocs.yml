@@ -1,0 +1,13 @@
+site_name: Documentação Dbt-Core-Introduction
+repo_url: link github
+repo_name: dbt-core-introduction
+edit_uri: tree/main/docs
+
+theme:
+  name: material
+  language: pt-BR
+
+plugin:
+  - search
+  - mermaid2
+  - mkdocstrings

@@ -9,6 +9,34 @@ readme = "README.md"
 python = "^3.12"
 
 
+[tool.poetry.group.doc.dependencies]
+mkdocs = "^1.6.0"
+mkdocs-material = "^9.5.31"
+mkdocstrings = "^0.25.2"
+mkdocstrings-python = "^1.10.8"
+mkdocs-mermaid2-plugin = "^1.1.1"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.2"
+pytest-cov = "^5.0.0"
+ruff = "^0.6.1"
+taskipy = "^1.13.0"
+mypy = "^1.11.1"
+python-dotenv = "^1.0.1"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.taskipy.tasks]
+format = """
+ruff chec --select I --fix .
+ruff format .
+"""
+kill = "kill -9 $(lsof -t -i :8000)"
+test = "pytest -v"
+run = """
+python3 app/main.py
+"""
+doc = "mkdocs serve"
