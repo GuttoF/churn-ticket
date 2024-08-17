@@ -7,6 +7,10 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
+polars = "^1.5.0"
+seaborn = "^0.13.2"
+optuna = "^3.6.1"
+duckdb = "^1.0.0"
 
 
 [tool.poetry.group.doc.dependencies]

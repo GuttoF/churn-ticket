@@ -1,10 +1,8 @@
 import os
 import re
 import sys
-
+from pathlib import Path
 import duckdb
-from dotenv import load_dotenv
-
 
 def snake_case(column_name: str) -> str:
     """
@@ -17,17 +15,15 @@ def snake_case(column_name: str) -> str:
     - str: The column name in snake_case.
     """
     name_with_underscores = re.sub(r"(?<!^)(?=[A-Z])", "_", column_name)
-    
+
     return name_with_underscores.lower()
 
 
-# Load the environment variables
-env_path = os.path.join(os.path.dirname(__file__), "..", "..", ".env")
-load_dotenv(dotenv_path=env_path)
+main_path = Path().resolve().parent
+#path = os.path.join(main_path, "churn-ticket")
 
-path = os.getenv("HOMEPATH")
-full_path = os.path.join(path, "data/raw/churn.csv")
-new_path = os.path.join(path, "data/interim/churn.db")
+full_path = os.path.join(main_path, "data/raw/churn.csv")
+new_path = os.path.join(main_path, "data/interim/churn.db")
 
 # verify if the file exists
 if not os.path.exists(full_path):
