@@ -7,6 +7,9 @@
 .AppleDouble
 .LSOverride
 
+# Ignore all .html files in the reports directory
+reports/*.html
+
 # Icon must end with two \r
 Icon
 
