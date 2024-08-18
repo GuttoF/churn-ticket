@@ -23,7 +23,7 @@ class FeatureEngineering:
     def __init__(self, seed=None):
         self.seed = seed
 
-    def transform(self, dataframe: pd.DataFrame) -> "FeatureEngineering":
+    def transform(self, dataframe: pd.DataFrame) -> tuple:
         """
         Perform feature engineering on the given dataframe.
 
@@ -67,7 +67,8 @@ class FeatureEngineering:
 
         return X_train, X_test, X_val, y_train, y_test, y_val, id_train, id_test, id_val
 
-    def _perform_transformations(self, dataframe: pd.DataFrame) -> pd.DataFrame:
+    @staticmethod
+    def _perform_transformations(dataframe: pd.DataFrame) -> pd.DataFrame:
         """
         Perform feature transformations on the given dataframe.
 
@@ -146,7 +147,8 @@ class FeatureEngineering:
 
         return dataframe
 
-    def report_na(self, dataframe: pd.DataFrame) -> logging.info:
+    @staticmethod
+    def report_na(dataframe: pd.DataFrame) -> logging.info:
         """
         Reports the number of missing values (NA) in each column of the given dataframe.
 
@@ -168,7 +170,8 @@ class FeatureEngineering:
                 )
         return logging.info("There are no NA values in any column.")
 
-    def get_profile_report(self, dataframe: pd.DataFrame, path: str) -> None:
+    @staticmethod
+    def get_profile_report(dataframe: pd.DataFrame, path: str) -> None:
         """
         Generate a profile report for the given dataframe.
 
@@ -189,9 +192,9 @@ class FeatureEngineering:
         report.to_file(path)
         logging.info("Profile report saved.")
 
-    def get_comparation_reports(
-        self,
-        dataframe1: pd.DataFrame,
+    @staticmethod
+    def get_comparative_reports(
+            dataframe1: pd.DataFrame,
         dataframe2: pd.DataFrame,
         path: str,
     ) -> None:
@@ -219,12 +222,13 @@ class FeatureEngineering:
         comparison_report.to_file(path)
         logging.info("Comparison report saved.")
 
-    def save_data(self, dataframe: pd.DataFrame, file_path: str) -> None:
+    @staticmethod
+    def save_data(data, file_path: str) -> None:
         """
-        Save the given dataframe to a Parquet file.
+        Save the given dataframe or series to a Parquet or pkl file.
 
         Args:
-            dataframe (pandas.DataFrame): The dataframe to be saved.
+            data (pandas.DataFrame or pandas.Series): The dataframe or series to be saved.
             file_path (str): The path to the output file.
 
         Returns:
@@ -238,8 +242,19 @@ class FeatureEngineering:
             if os.path.exists(file_path):
                 logging.warning("File already exists. It will be overwritten.")
 
-            table = pa.Table.from_pandas(dataframe)
-            pq.write_table(table, file_path)
-            logging.info("Data successfully saved")
+            # Check if the input is a pd.Series
+            if isinstance(data, pd.Series):
+                # Save as a pkl file
+                file_path = file_path if file_path.endswith('.pkl') else f"{file_path}.pkl"
+                data.to_pickle(file_path)
+                logging.info(f"Series successfully saved as {file_path}")
+            elif isinstance(data, pd.DataFrame):
+                # Save as a Parquet file
+                file_path = file_path if file_path.endswith('.parquet') else f"{file_path}.parquet"
+                table = pa.Table.from_pandas(data)
+                pq.write_table(table, file_path)
+                logging.info(f"Dataframe successfully saved as {file_path}")
+            else:
+                raise ValueError("Unsupported data type. Only DataFrame and Series are supported.")
         except Exception as e:
             logging.error(f"Failed to save data: {str(e)}")

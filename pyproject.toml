@@ -6,11 +6,15 @@ authors = ["Gutto <guttolaudie@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = ">=3.12,<3.13"
 polars = "^1.5.0"
 seaborn = "^0.13.2"
 optuna = "^3.6.1"
 duckdb = "^1.0.0"
+pandas = "^2.2.2"
+pyarrow = "^17.0.0"
+scikit-learn = "^1.5.1"
+ydata-profiling = "^4.9.0"
 
 
 [tool.poetry.group.doc.dependencies]

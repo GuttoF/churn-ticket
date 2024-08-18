@@ -8,7 +8,21 @@
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
+
+# Ignore all .db files
+*.db
+
+# Ignore all .csv files
+*.csv
+
+# Ignore specific PKL files
+y_train.pkl
+y_test.pkl
+y_val.pkl
+
+# Ignore all Parquet files
+*.parquet
 
 # Thumbnails
 ._*
