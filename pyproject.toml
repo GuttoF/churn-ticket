@@ -15,6 +15,9 @@ pandas = "^2.2.2"
 pyarrow = "^17.0.0"
 scikit-learn = "^1.5.1"
 ydata-profiling = "^4.9.0"
+catboost = "^1.2.5"
+lightgbm = "^4.5.0"
+xgboost = "^2.1.1"
 
 
 [tool.poetry.group.doc.dependencies]
