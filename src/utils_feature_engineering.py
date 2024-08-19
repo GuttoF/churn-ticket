@@ -194,7 +194,7 @@ class FeatureEngineering:
 
     @staticmethod
     def get_comparative_reports(
-            dataframe1: pd.DataFrame,
+        dataframe1: pd.DataFrame,
         dataframe2: pd.DataFrame,
         path: str,
     ) -> None:
@@ -245,16 +245,24 @@ class FeatureEngineering:
             # Check if the input is a pd.Series
             if isinstance(data, pd.Series):
                 # Save as a pkl file
-                file_path = file_path if file_path.endswith('.pkl') else f"{file_path}.pkl"
+                file_path = (
+                    file_path if file_path.endswith(".pkl") else f"{file_path}.pkl"
+                )
                 data.to_pickle(file_path)
                 logging.info(f"Series successfully saved as {file_path}")
             elif isinstance(data, pd.DataFrame):
                 # Save as a Parquet file
-                file_path = file_path if file_path.endswith('.parquet') else f"{file_path}.parquet"
+                file_path = (
+                    file_path
+                    if file_path.endswith(".parquet")
+                    else f"{file_path}.parquet"
+                )
                 table = pa.Table.from_pandas(data)
                 pq.write_table(table, file_path)
                 logging.info(f"Dataframe successfully saved as {file_path}")
             else:
-                raise ValueError("Unsupported data type. Only DataFrame and Series are supported.")
+                raise ValueError(
+                    "Unsupported data type. Only DataFrame and Series are supported."
+                )
         except Exception as e:
             logging.error(f"Failed to save data: {str(e)}")

@@ -4,7 +4,12 @@ from matplotlib import pyplot as plt
 import seaborn as sns
 from sklearn.ensemble import ExtraTreesClassifier, RandomForestClassifier
 from sklearn.feature_selection import RFE
-from sklearn.preprocessing import MinMaxScaler, RobustScaler, OneHotEncoder, StandardScaler
+from sklearn.preprocessing import (
+    MinMaxScaler,
+    RobustScaler,
+    OneHotEncoder,
+    StandardScaler,
+)
 
 
 def multiple_histplots(data: pd.DataFrame, rows: int, cols: int):
@@ -22,10 +27,11 @@ def multiple_histplots(data: pd.DataFrame, rows: int, cols: int):
 
     for i, col in enumerate(data.columns, 1):
         plt.subplot(rows, cols, i)
-        ax = sns.histplot(data[col], kde = True)
-        plt.ylabel('')
+        ax = sns.histplot(data[col], kde=True)
+        plt.ylabel("")
 
     return ax
+
 
 def apply_log_transformation(datasets: pd.DataFrame, columns: list) -> None:
     """
@@ -45,6 +51,7 @@ def apply_log_transformation(datasets: pd.DataFrame, columns: list) -> None:
 
     return None
 
+
 def apply_one_hot_encoder(datasets: pd.DataFrame, columns: list):
     """
     Applies One-Hot Encoding to specified columns in a list of datasets using sklearn OneHotEncoder,
@@ -57,13 +64,15 @@ def apply_one_hot_encoder(datasets: pd.DataFrame, columns: list):
     Returns:
         None
     """
-    encoder = OneHotEncoder(sparse_output=False, drop='first')
+    encoder = OneHotEncoder(sparse_output=False, drop="first")
 
     for df in datasets:
         # Apply One-Hot Encoding
-        encoded_columns = pd.DataFrame(encoder.fit_transform(df[columns]),
-                                       columns=encoder.get_feature_names_out(columns),
-                                       index=df.index)
+        encoded_columns = pd.DataFrame(
+            encoder.fit_transform(df[columns]),
+            columns=encoder.get_feature_names_out(columns),
+            index=df.index,
+        )
 
         # Drop original columns and concatenate encoded columns
         df.drop(columns=columns, inplace=True)
@@ -73,6 +82,7 @@ def apply_one_hot_encoder(datasets: pd.DataFrame, columns: list):
         df.columns = [col.lower().replace(" ", "_") for col in df.columns]
 
     return None
+
 
 def apply_standard_scaler(datasets: list, columns: list):
     """
@@ -115,6 +125,7 @@ def apply_min_max_scaler(datasets: list, columns: list):
 
     return None
 
+
 def apply_robust_scaler(datasets: list, columns: list):
     """
     Applies Robust Scaling to specified columns in a list of datasets using sklearn RobustScaler,
@@ -135,13 +146,14 @@ def apply_robust_scaler(datasets: list, columns: list):
 
     return None
 
+
 def plot_feature_importance(
-        X_train: pd.DataFrame,
-        y_train: pd.Series,
-        model_type: str = 'ExtraTrees',
-        n_estimators: int = 200,
-        n_jobs: int = 14,
-        random_state: int = 42
+    X_train: pd.DataFrame,
+    y_train: pd.Series,
+    model_type: str = "ExtraTrees",
+    n_estimators: int = 200,
+    n_jobs: int = 14,
+    random_state: int = 42,
 ):
     """
     Function to calculate and plot feature importance using ExtraTreesClassifier or RandomForestClassifier.
@@ -160,10 +172,14 @@ def plot_feature_importance(
     """
 
     # Select the model based on 'model_type'
-    if model_type == 'ExtraTrees':
-        model = ExtraTreesClassifier(n_estimators=n_estimators, n_jobs=n_jobs, random_state=random_state)
-    elif model_type == 'RandomForest':
-        model = RandomForestClassifier(n_estimators=n_estimators, n_jobs=n_jobs, random_state=random_state)
+    if model_type == "ExtraTrees":
+        model = ExtraTreesClassifier(
+            n_estimators=n_estimators, n_jobs=n_jobs, random_state=random_state
+        )
+    elif model_type == "RandomForest":
+        model = RandomForestClassifier(
+            n_estimators=n_estimators, n_jobs=n_jobs, random_state=random_state
+        )
     else:
         raise ValueError("model_type must be 'ExtraTrees' or 'RandomForest'")
 
@@ -171,25 +187,29 @@ def plot_feature_importance(
     model.fit(X_train, y_train)
 
     # Create a DataFrame with features and their importance scores
-    feature_selection = pd.DataFrame({
-        'feature': X_train.columns,
-        'importance': model.feature_importances_
-    }).sort_values('importance', ascending=False).reset_index(drop=True)
+    feature_selection = (
+        pd.DataFrame(
+            {"feature": X_train.columns, "importance": model.feature_importances_}
+        )
+        .sort_values("importance", ascending=False)
+        .reset_index(drop=True)
+    )
 
     # Plot the feature importance
     plt.figure(figsize=(10, 8))
-    ax = sns.barplot(x='importance', y='feature', data=feature_selection)
-    ax.set_title(f'Feature Importance with {model_type}')
+    ax = sns.barplot(x="importance", y="feature", data=feature_selection)
+    ax.set_title(f"Feature Importance with {model_type}")
     plt.show()
 
     # Return the DataFrame with feature importance
     return feature_selection
 
+
 def select_features_with_rfe(
-        X_train: pd.DataFrame,
-        y_train: pd.Series,
-        n_features_to_select: int = 12,
-        n_jobs: int = 14
+    X_train: pd.DataFrame,
+    y_train: pd.Series,
+    n_features_to_select: int = 12,
+    n_jobs: int = 14,
 ):
     """
     Function to perform Recursive Feature Elimination (RFE) using RandomForestClassifier

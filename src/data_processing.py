@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 import duckdb
 
+
 def snake_case(column_name: str) -> str:
     """
     Converts a CamelCase or PascalCase string to snake_case.
@@ -20,7 +21,7 @@ def snake_case(column_name: str) -> str:
 
 
 main_path = Path().resolve().parent
-#path = os.path.join(main_path, "churn-ticket")
+# path = os.path.join(main_path, "churn-ticket")
 
 full_path = os.path.join(main_path, "data/raw/churn.csv")
 new_path = os.path.join(main_path, "data/interim/churn.db")

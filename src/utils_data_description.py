@@ -3,6 +3,7 @@ import seaborn as sns
 from matplotlib import pyplot as plt
 import pandas as pd
 
+
 # Classes
 class DataDescription:
     def __init__(self, data):
@@ -12,23 +13,42 @@ class DataDescription:
         return self.data.head()
 
     def data_dimensions(self):
-        return print(f"Number of Rows: {self.data.shape[0]}\nNumber of Columns: {self.data.shape[1]}")
+        return print(
+            f"Number of Rows: {self.data.shape[0]}\nNumber of Columns: {self.data.shape[1]}"
+        )
 
     def data_types(self):
-        return {col_name: dtype for col_name, dtype in zip(self.data.columns, self.data.dtypes)}
+        return {
+            col_name: dtype
+            for col_name, dtype in zip(self.data.columns, self.data.dtypes)
+        }
 
     def check_na(self):
-        return self.data.select([pl.col(col).is_null().sum().alias(col) for col in self.data.columns])
+        return self.data.select(
+            [pl.col(col).is_null().sum().alias(col) for col in self.data.columns]
+        )
 
     def select_numeric_features(self):
-        return self.data.select(pl.col([col for col in self.data.columns if self.data[col].dtype in [pl.Int64, pl.Float64]]))
+        return self.data.select(
+            pl.col(
+                [
+                    col
+                    for col in self.data.columns
+                    if self.data[col].dtype in [pl.Int64, pl.Float64]
+                ]
+            )
+        )
 
     def select_categorical_features(self):
-        return self.data.select(pl.col([col for col in self.data.columns if self.data[col].dtype == pl.Utf8]))
+        return self.data.select(
+            pl.col(
+                [col for col in self.data.columns if self.data[col].dtype == pl.Utf8]
+            )
+        )
 
 
 # Functions
-def plot_features(data: pd.DataFrame, plot_type: str = 'histplot') -> None:
+def plot_features(data: pd.DataFrame, plot_type: str = "histplot") -> None:
     """
     Plots features of a DataFrame as either histograms or boxplots.
 
@@ -43,7 +63,7 @@ def plot_features(data: pd.DataFrame, plot_type: str = 'histplot') -> None:
     Returns:
     None
     """
-    if plot_type not in ['histplot', 'boxplot']:
+    if plot_type not in ["histplot", "boxplot"]:
         raise ValueError("plot_type must be either 'histplot' or 'boxplot'")
 
     count = 1
@@ -53,20 +73,20 @@ def plot_features(data: pd.DataFrame, plot_type: str = 'histplot') -> None:
     for col in data.columns:
         plt.subplot(3, 3, count)
 
-        if plot_type == 'histplot':
+        if plot_type == "histplot":
             axes = sns.histplot(data=data, x=col, kde=True)
-            axes.title.set_text(f'Histogram of {col}')
-        elif plot_type == 'boxplot':
-            axes = sns.boxplot(data=data, x=col, orient='h')
-            axes.title.set_text(f'Catching outliers in {col}')
+            axes.title.set_text(f"Histogram of {col}")
+        elif plot_type == "boxplot":
+            axes = sns.boxplot(data=data, x=col, orient="h")
+            axes.title.set_text(f"Catching outliers in {col}")
 
         plt.subplots_adjust(hspace=0.5, wspace=0.5)
         count += 1
 
-
     plt.show()
 
     return None
+
 
 def categorical_metrics(data: pd.DataFrame, column: str):
     """
@@ -80,5 +100,9 @@ def categorical_metrics(data: pd.DataFrame, column: str):
         [dataframe]: [A dataframe with absolute and percent values]
     """
 
-
-    return pd.DataFrame({'absolute': data[column].value_counts(), 'percent %': data[column].value_counts(normalize = True) * 100 })
+    return pd.DataFrame(
+        {
+            "absolute": data[column].value_counts(),
+            "percent %": data[column].value_counts(normalize=True) * 100,
+        }
+    )
