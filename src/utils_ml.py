@@ -334,3 +334,5 @@ def threshold_tuning_plot(models: list, X_val: pd.DataFrame, y_val: pd.Series, t
         axes[j, -1].set_title('ROC Curve')
 
     plt.show()
+
+    return None

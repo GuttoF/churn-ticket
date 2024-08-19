@@ -17,7 +17,7 @@
     <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="ignoredIdentifiers">
         <list>
-          <option value="bool.astype" />
+          <option value="int.*" />
         </list>
       </option>
     </inspection_tool>
