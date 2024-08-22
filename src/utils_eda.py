@@ -6,6 +6,21 @@ import scipy.stats as ss
 from plotly.subplots import make_subplots
 
 
+def cramers_v(x, y):
+    """
+    Calculate Cramér's V statistic for categorical-categorical association.
+    """
+    confusion_matrix = pd.crosstab(x, y)
+    chi2 = ss.chi2_contingency(confusion_matrix)[0]
+    n = confusion_matrix.sum().sum()
+    phi2 = chi2 / n
+    r, k = confusion_matrix.shape
+    phi2_corr = max(0, phi2 - ((k - 1) * (r - 1)) / (n - 1))
+    r_corr = r - ((r - 1) ** 2) / (n - 1)
+    k_corr = k - ((k - 1) ** 2) / (n - 1)
+    return np.sqrt(phi2_corr / min((k_corr - 1), (r_corr - 1)))
+
+
 class DataVisualizer:
     def __init__(self, data: pd.DataFrame):
         """
@@ -260,20 +275,6 @@ class DataVisualizer:
         )
         fig.show()
 
-    def cramers_v(self, x, y):
-        """
-        Calculate Cramér's V statistic for categorical-categorical association.
-        """
-        confusion_matrix = pd.crosstab(x, y)
-        chi2 = ss.chi2_contingency(confusion_matrix)[0]
-        n = confusion_matrix.sum().sum()
-        phi2 = chi2 / n
-        r, k = confusion_matrix.shape
-        phi2_corr = max(0, phi2 - ((k - 1) * (r - 1)) / (n - 1))
-        r_corr = r - ((r - 1) ** 2) / (n - 1)
-        k_corr = k - ((k - 1) ** 2) / (n - 1)
-        return np.sqrt(phi2_corr / min((k_corr - 1), (r_corr - 1)))
-
     def categorical_heatmap(self, columns: list) -> None:
         """
         Generate a heatmap for the association between categorical columns.
@@ -284,7 +285,7 @@ class DataVisualizer:
                 if col1 == col2:
                     cramer_matrix.loc[col1, col2] = 1.0
                 else:
-                    cramer_matrix.loc[col1, col2] = self.cramers_v(
+                    cramer_matrix.loc[col1, col2] = cramers_v(
                         self.data[col1], self.data[col2]
                     )
 
