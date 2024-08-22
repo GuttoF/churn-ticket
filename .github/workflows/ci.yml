@@ -40,7 +40,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        poetry install --no-root --without doc, dev, ml_steps, jupyter-notebooks, eda
+        poetry install --no-root --without doc,dev,ml_steps,jupyter-notebooks,eda
 
     - name: Run tests
       run: |
