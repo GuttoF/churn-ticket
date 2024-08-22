@@ -19,7 +19,7 @@ RUN pip install poetry
 COPY . /app
 
 RUN poetry config virtualenvs.create false \
-    && poetry install --no-interaction --no-ansi --without doc, dev, jupyter-notebooks, ml-steps, eda
+    && poetry install --no-interaction --no-ansi --without doc,dev,jupyter-notebooks,ml_steps,eda
 
 # FASTAPI PORT
 EXPOSE 8000

@@ -378,3 +378,71 @@ def threshold_tuning_plot(
     plt.show()
 
     return None
+
+
+def threshold_tuning_plot_single(
+    model, X_val: pd.DataFrame, y_val: pd.Series, threshold: float = 0.5
+):
+    """Plot ROC AUC curve and confusion matrix for a single model at a specified threshold.
+
+    Args:
+        model: The machine learning model.
+        X_val (pd.DataFrame): Validation variables.
+        y_val (pd.Series): Validation target feature.
+        threshold (float, optional): Threshold to evaluate (default: 0.5).
+
+    Returns:
+        dict: A dictionary containing the confusion matrix and the ROC AUC curve data.
+    """
+
+    class_names = ["Not Churn", "Churn"]
+
+    y_prob = model.predict_proba(X_val)[:, 1]
+    y_pred = (y_prob >= threshold).astype(int)
+
+    # Compute ROC curve and ROC area
+    fpr, tpr, _ = roc_curve(y_val, y_prob)
+    roc_auc = auc(fpr, tpr)
+
+    # Compute confusion matrix
+    cm = confusion_matrix(y_val, y_pred)
+
+    # Plot confusion matrix
+    plt.figure(figsize=(10, 5))
+
+    plt.subplot(1, 2, 1)
+    sns.heatmap(
+        cm,
+        annot=True,
+        fmt="d",
+        cmap="Blues",
+        xticklabels=class_names,
+        yticklabels=class_names,
+    )
+    plt.title(f"Confusion Matrix\nThreshold = {threshold:.2f}")
+    plt.xlabel("Predicted")
+    plt.ylabel("True")
+
+    # Plot ROC curve
+    plt.subplot(1, 2, 2)
+    plt.plot(fpr, tpr, color="darkorange", lw=2, label=f"ROC curve (area = {roc_auc:.2f})")
+    plt.plot([0, 1], [0, 1], color="navy", lw=2, linestyle="--")
+    plt.xlim([0.0, 1.0])
+    plt.ylim([0.0, 1.05])
+    plt.xlabel("False Positive Rate")
+    plt.ylabel("True Positive Rate")
+    plt.title("ROC Curve")
+    plt.legend(loc="lower right")
+
+    plt.tight_layout()
+    plt.show()
+
+    # Return the confusion matrix and ROC curve data
+    return {
+        "confusion_matrix": cm,
+        "roc_curve": {
+            "fpr": fpr,
+            "tpr": tpr,
+            "roc_auc": roc_auc
+        }
+    }

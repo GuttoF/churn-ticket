@@ -61,10 +61,22 @@ def run():
     text_step(h7_sub, h7_mark)
     eda.hypotheses_7()
 
-    h8_sub = "8: Clientes com saldos mais altos têm maior probabilidade de sair do banco."
-    h8_mark = "**Verdadeiro** Clientes com saldos mais altos têm maior probabilidade de sair do banco."
+    h8_sub = "8: Clientes mais velhos têm maior probabilidade de ter cartão de crédito."
+    h8_mark = "**Falso** A maioria dos clientes têm cartão de crédito, independente da idade."
     text_step(h8_sub, h8_mark)
     eda.hypotheses_8()
+
+    st.subheader("Conclusão")
+    st.markdown("""
+    A análise exploratória revelou alguns insights importantes sobre o comportamento dos clientes:
+
+    - O país onde o cliente mora aparenta ser relevante, dado o valor de saldo médio.
+    - Clientes adultos têm mais produtos bancários do que seniors e adolescentes.
+    - Como a maioria dos clientes possuem cartão de crédito (cerca de 70%), essa variável não é tão relevante para previsão de churn.
+    - O tempo de permanência no banco não aparenta ter uma relevância significativa no churn.
+
+    Essas informações podem ser usadas para melhorar as estratégias de retenção de clientes e ajustar o foco das campanhas de marketing.
+    """)
 
 if __name__ == "__main__":
     run()
