@@ -11,6 +11,6 @@ services:
       context: .
     ports:
       - "8501:8501"
-    command: poetry run streamlit run src/app/main.py --server.port 8501 --server.address 0.0.0.0
+    command: sh -c 'poetry run streamlit run src/app/main.py --server.port ${PORT:-8501} --server.address 0.0.0.0'
     depends_on:
       - api
