@@ -40,7 +40,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        poetry install --no-root --without dev doc
+        poetry install --no-root --without doc
 
     - name: Run tests
       run: |
