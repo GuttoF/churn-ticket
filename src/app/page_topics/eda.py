@@ -14,7 +14,10 @@ def run():
 
     # Ler o DataFrame
     path = Path().resolve().parent
-    data_path = path / "churn-ticket/data/interim"
+    # Local path
+    #data_path = path / "churn-ticket/data/interim"
+    # Docker path
+    data_path = path / "app/data/interim"
     conn_path = str(data_path / "churn.db")
     conn = duckdb.connect(database=conn_path, read_only=False)
     query = conn.execute("SELECT * FROM churn")

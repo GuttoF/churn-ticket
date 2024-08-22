@@ -35,7 +35,7 @@ def run():
         }
 
         # API URL
-        api_url = "http://127.0.0.1:8000/predict"
+        api_url = "http://api:8000/predict"
 
         # POST
         response = requests.post(api_url, json=input_data)

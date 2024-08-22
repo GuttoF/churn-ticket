@@ -4,9 +4,12 @@ from pathlib import Path
 import duckdb
 from utils.utils_fe_page import FeatureEngineering
 
-def get_churn_predictions_from_api(api_url="http://localhost:8000/predict"):
+def get_churn_predictions_from_api(api_url="http://api:8000/predict"):
     path = Path().resolve().parent
-    data_path = path / "churn-ticket/data"
+    # Local path
+    #data_path = path / "churn-ticket/data"
+    # Docker path
+    data_path = path / "app/data"
 
     conn_path = str(data_path / "interim/churn.db")
     conn = duckdb.connect(database=conn_path, read_only=False)

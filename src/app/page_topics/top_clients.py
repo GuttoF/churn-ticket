@@ -14,13 +14,16 @@ def run():
     st.title("Informações dos Top Clients")
 
     path = Path().resolve().parent
-    data_path = path / "churn-ticket/data"
+    # Local path
+    #data_path = path / "churn-ticket/data"
+    # Docker path
+    data_path = path / "app/data"
     X_test = pd.read_parquet(data_path / "processed/X_test.parquet")
 
     fe = FeatureEngineering()
     X_test = fe._perform_transformations(X_test)
 
-    url = "http://localhost:8000/predict"  # Altere para o endereço da sua API se for diferente
+    url = "http://api:8000/predict"
     predictions = []
     probabilities = []
 

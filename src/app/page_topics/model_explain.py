@@ -1,7 +1,10 @@
 import streamlit as st
 from pathlib import Path
 
-pic_path = Path().resolve().parent / "churn-ticket" / "pics" / "model_result.png"
+# Local path
+#pic_path = Path().resolve().parent / "churn-ticket" / "pics" / "model_result.png"
+# Docker path
+pic_path = Path().resolve().parent / "app" / "pics" / "model_result.png"
 
 def run():
     st.title(":thinking_face: Explicação do Modelo")
