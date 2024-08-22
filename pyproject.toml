@@ -26,6 +26,7 @@ streamlit-extras = "^0.4.7"
 python-dotenv = "^1.0.1"
 scikit-learn = "^1.5.1"
 requests = "^2.32.3"
+altair = "^5.4.0"
 
 
 [tool.poetry.group.doc.dependencies]

@@ -5596,4 +5596,4 @@ unicode = ["tangled-up-in-unicode (==0.2.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.12,<3.13"
-content-hash = "997b91b12cabf6442777c0d9ac90af18ee773ea7d19a7b99d078b1920227df09"
+content-hash = "b5e2c02cbffdb1dab9cc7e91eee418ad1dd0de18a241599a88717c2a489f8841"

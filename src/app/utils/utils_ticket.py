@@ -1,32 +1,6 @@
 import pandas as pd
 
-
-def churn_rate_per_month(df: pd.DataFrame) -> float:
-    """Calculates churn rate per month.
-
-    Args:
-        df (dataframe): Dataframe with the data.
-
-    Returns:
-        monthly churn rate: Monthly churn rate as a percentage.
-    """
-    # Reset index of value counts
-    aux1 = df["is_active_member"].value_counts().reset_index()
-
-    # Filter for active members
-    aux2 = aux1[aux1["is_active_member"] == 1]
-
-    # Calculate churn rate
-    churn_rate = aux2["is_active_member"].sum() / aux1["is_active_member"].sum()
-
-    # Calculate monthly churn rate
-    monthly_churn_rate = churn_rate / 12
-
-    # Return monthly churn rate as a percentage
-    return monthly_churn_rate * 100
-
-
-def top_clients(
+def top_clients_result(
     scenario_name: str,
     data: pd.DataFrame,
     probability: str,

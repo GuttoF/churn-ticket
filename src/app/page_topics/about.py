@@ -11,6 +11,8 @@ def run():
     """)
     st.write("""
     Se quiser saber mais sobre meu mim ou entrar em contato, sinta-se à vontade para visitar meu [GitHub](https://github.com/GuttoF/) ou meu [LinkedIn](www.linkedin.com/in/gutto-laudie). Estou sempre aberto a novas oportunidades e a colaborar em projetos interessantes!
+    
+    Esse projeto está hospedado [aqui](https://github.com/GuttoF/churn-ticket).
     """)
 
 if __name__ == "__main__":
