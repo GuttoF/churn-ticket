@@ -22,6 +22,6 @@ RUN poetry config virtualenvs.create false \
     && poetry install --no-root --no-interaction --no-ansi --without doc,dev,jupyter-notebooks,ml_steps,eda
 
 # Streamlit PORT
-EXPOSE 8001
+EXPOSE 8501
 
-CMD ["poetry", "run", "streamlit", "run", "src/app/main.py", "--server.port=8001"]
+CMD ["poetry", "run", "streamlit", "run", "src/app/main.py"]
