@@ -27,4 +27,4 @@ EXPOSE 8000
 # Streamlit PORT
 EXPOSE 8501
 
-CMD ["poetry", "run", "streamlit", "run", "src/app/main.py"]
+CMD ["poetry", "run", "streamlit", "run", "src/app/main.py", "--server.port=8501", "--server.address=0.0.0.0"]
