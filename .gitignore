@@ -13,9 +13,7 @@ reports/*.html
 # Icon must end with two \r
 Icon
 
-# Ignore all .csv files
 *.csv
-
 
 # Thumbnails
 ._*
