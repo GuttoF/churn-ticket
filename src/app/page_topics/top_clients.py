@@ -23,7 +23,9 @@ def run():
     fe = FeatureEngineering()
     X_test = fe._perform_transformations(X_test)
 
-    url = "http://api:8000/predict"
+    api_port = os.getenv("API_PORT", "8000")
+    url = f"http://api:{api_port}/predict"
+
     predictions = []
     probabilities = []
 

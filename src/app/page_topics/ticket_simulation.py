@@ -1,4 +1,5 @@
 import streamlit as st
+import os
 from utils.utils_business_translation import get_churn_predictions_from_api, top_clients, knapsack_solver
 import pandas as pd
 
@@ -15,8 +16,9 @@ def run():
     Com isso obtemos as seguintes informações:
     
     """)
-
-    return_clients, churn_loss, total_return, df_simulation = get_churn_predictions_from_api()
+    api_port = os.getenv("API_PORT", "8000")
+    api_url = f"http://api:{api_port}/predict"
+    return_clients, churn_loss, total_return, df_simulation = get_churn_predictions_from_api(api_url)
 
     result_return_clients = f"€{return_clients}"
     result_churn_loss = f"€{churn_loss}"

@@ -1,6 +1,6 @@
 import streamlit as st
 import requests
-
+import os
 
 def run():
     st.title(":robot_face: Previsão de Churn")
@@ -35,7 +35,8 @@ def run():
         }
 
         # API URL
-        api_url = "http://api:8000/predict"
+        api_port = os.getenv("API_PORT", "8000")
+        api_url = f"http://api:{api_port}/predict"
 
         # POST
         response = requests.post(api_url, json=input_data)

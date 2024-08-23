@@ -4,7 +4,7 @@ from pathlib import Path
 import duckdb
 from utils.utils_fe_page import FeatureEngineering
 
-def get_churn_predictions_from_api(api_url="http://api:8000/predict"):
+def get_churn_predictions_from_api(api_url: str):
     path = Path().resolve().parent
     # Local path
     #data_path = path / "churn-ticket/data"
