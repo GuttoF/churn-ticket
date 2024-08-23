@@ -35,8 +35,9 @@ def run():
         }
 
         # API URL
-        api_port = os.getenv("API_PORT", "8000")
-        api_url = f"http://api:{api_port}/predict"
+        api_url = os.getenv("API_URL")
+        if not api_url:
+            raise ValueError("API_URL not found in environment variables")
 
         # POST
         response = requests.post(api_url, json=input_data)

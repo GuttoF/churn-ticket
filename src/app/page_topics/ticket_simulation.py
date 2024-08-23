@@ -16,8 +16,10 @@ def run():
     Com isso obtemos as seguintes informações:
     
     """)
-    api_port = os.getenv("API_PORT", "8000")
-    api_url = f"http://api:{api_port}/predict"
+    api_url = os.getenv("API_URL")
+    if not api_url:
+        raise ValueError("API_URL not found in environment variables")
+
     return_clients, churn_loss, total_return, df_simulation = get_churn_predictions_from_api(api_url)
 
     result_return_clients = f"€{return_clients}"

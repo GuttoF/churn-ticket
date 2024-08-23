@@ -24,8 +24,9 @@ def run():
     fe = FeatureEngineering()
     X_test = fe._perform_transformations(X_test)
 
-    api_port = os.getenv("API_PORT", "8000")
-    url = f"http://api:{api_port}/predict"
+    api_url = os.getenv("API_URL")
+    if not api_url:
+        raise ValueError("API_URL not found in environment variables")
 
     predictions = []
     probabilities = []
@@ -44,7 +45,7 @@ def run():
             "estimated_salary": row["estimated_salary"]
         }
 
-        response = requests.post(url, json=input_data)
+        response = requests.post(api_url, json=input_data)
         if response.status_code == 200:
             result = response.json()
             predictions.append(result['prediction'])
