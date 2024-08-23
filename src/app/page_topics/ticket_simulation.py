@@ -22,9 +22,10 @@ def run():
 
     return_clients, churn_loss, total_return, df_simulation = get_churn_predictions_from_api(api_url)
 
-    result_return_clients = f"€{return_clients}"
-    result_churn_loss = f"€{churn_loss}"
-    result_total_return = f"{total_return}%"
+    result_return_clients = f"€{return_clients:,.2f}".replace(',', 'X').replace('.', ',').replace('X', '.')
+    result_churn_loss = f"€{churn_loss:,.2f}".replace(',', 'X').replace('.', ',').replace('X', '.')
+    result_total_return = f"{total_return:,.2f}%".replace(',', 'X').replace('.', ',').replace('X', '.')
+
     st.metric("Retorno Total Estimado", result_return_clients)
     st.metric("Perda de Churn", result_churn_loss)
     st.metric("Retorno Total", result_total_return)
