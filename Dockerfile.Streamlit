@@ -26,7 +26,7 @@ RUN chmod +x /entrypoint.sh
 RUN poetry config virtualenvs.create false \
     && poetry install --no-root --no-interaction --no-ansi --without doc,dev,jupyter-notebooks,ml_steps,eda
 
-ENV OCTOPRINT_PORT=5000
+ENV PORT=8501
 
 # Expose the port
 EXPOSE 8501
