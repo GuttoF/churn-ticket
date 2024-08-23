@@ -14,7 +14,6 @@ RUN apt-get update && apt-get install -y \
 # Install poetry
 RUN pip install poetry
 
-
 # Copy the current directory contents into the container at /app
 COPY . /app
 
@@ -27,4 +26,6 @@ EXPOSE 8000
 # Streamlit PORT
 EXPOSE 8501
 
-CMD ["poetry", "run",  "streamlit", "run", "src/app/main.py"]
+# Start both FastAPI and Streamlit
+CMD poetry run uvicorn src.api.main:app --host 0.0.0.0 --port 8000 & \
+    poetry run streamlit run src/app/main.py
