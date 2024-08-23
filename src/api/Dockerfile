@@ -24,4 +24,4 @@ RUN poetry config virtualenvs.create false \
 # PORT
 EXPOSE 8000
 
-CMD ["poetry", "run",  "uvicorn", "src.api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["gunicorn", "src.api.main:app", "-k", "uvicorn.workers.UvicornWorker", "--workers", "6", "--bind", "0.0.0.0:8000"]
