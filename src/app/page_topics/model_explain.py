@@ -35,8 +35,6 @@ def run():
     - **Falsos Positivos (FP)**: O modelo previu que o cliente iria entrar em churn, mas ele não entrou.
     - **Verdadeiros Negativos (VN)**: O modelo previu corretamente que o cliente não iria entrar em churn.
     - **Falsos Negativos (FN)**: O modelo previu que o cliente não iria entrar em churn, mas ele entrou.
-
-    Agora, você pode navegar pelo aplicativo para explorar os dados e fazer previsões com base nas informações inseridas.
     """)
 
     st.subheader("Resultados do Modelo")
