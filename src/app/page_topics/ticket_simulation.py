@@ -33,7 +33,26 @@ def run():
     - **Cenário 2**: Investimento variável para cada cliente, com base em sua probabilidade de churn e retorno financeiro esperado.
     """)
 
-    st.sidebar.subheader("Personalizar Simulação")
+    st.subheader("Como funciona o cenário 2?")
+
+    st.info("""
+    Imagine que você vai fazer uma viagem e tem uma mochila com capacidade limitada, ou seja, só cabe um certo peso ou volume de itens. Você tem vários objetos que gostaria de levar, como roupas, comida, livros, e eletrônicos, mas não consegue levar tudo porque a mochila é limitada.
+
+    Cada objeto tem um peso (ou ocupa um espaço) e também tem um valor para você (como a utilidade ou o quanto você gosta do item). O objetivo do problema da mochila é decidir quais itens levar na mochila para maximizar o valor total dos itens que você leva, sem ultrapassar a capacidade da mochila.
+    """)
+
+    st.write(
+        """
+        Usando o problema da mochila com probabilidades e um orçamento:
+
+        - p(churn) >= Altíssima(ex: 0,95): Cliente que irá sair.
+        - Alta(ex: 0,85) >= p(churn) < Altíssima: Cliente com alta probabilidade de ficar com um cupom de alto valor.
+        - Média(ex: 0,70) >= p(churn) < Alta: Cliente que pode ficar com um cupom de $100.
+        - Abaixo da média >= p(churn) < Média: Cliente que pode ficar com um cupom de $50.
+        """
+    )
+
+    st.sidebar.subheader("Simulação")
 
     top_n = st.sidebar.number_input("Quantidade de Clientes no Top", min_value=10, max_value=500, value=20, step=10)
 
