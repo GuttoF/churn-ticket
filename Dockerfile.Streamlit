@@ -14,7 +14,6 @@ RUN apt-get update && apt-get install -y \
 # Install poetry
 RUN pip install poetry
 
-
 # Copy the current directory contents into the container at /app
 COPY . /app
 
@@ -24,4 +23,5 @@ RUN poetry config virtualenvs.create false \
 # PORT
 EXPOSE 8501
 
-CMD ["poetry", "run", "python", "src/app/main.py"]
+CMD ["poetry", "run", "streamlit", "run", "src/app/main.py", "--server.port=$PORT"]
+
