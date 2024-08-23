@@ -33,12 +33,12 @@ def run():
     - **Cenário 2**: Investimento variável para cada cliente, com base em sua probabilidade de churn e retorno financeiro esperado.
     """)
 
-    st.subheader("Como funciona o cenário 2?")
+    st.subheader("Como Funciona o Cenário 2?")
 
     st.info("""
     Imagine que você vai fazer uma viagem e tem uma mochila com capacidade limitada, ou seja, só cabe um certo peso ou volume de itens. Você tem vários objetos que gostaria de levar, como roupas, comida, livros, e eletrônicos, mas não consegue levar tudo porque a mochila é limitada.
 
-    Cada objeto tem um peso (ou ocupa um espaço) e também tem um valor para você (como a utilidade ou o quanto você gosta do item). O objetivo do problema da mochila é decidir quais itens levar na mochila para maximizar o valor total dos itens que você leva, sem ultrapassar a capacidade da mochila.
+    Cada objeto tem um peso (ou ocupa um espaço) e também tem um valor para você (como a utilidade ou o quanto você gosta do item). O objetivo do problema da mochila é decidir quais itens levar na mochila para maximizar o valor total dos itens que você leva.
     """)
 
     st.write(
