@@ -4,6 +4,7 @@ import requests
 import plotly.express as px
 from pathlib import Path
 from utils.utils_fe_page import FeatureEngineering
+import os
 
 colors_list = [
     "#1D5B79", "#1D7865", "#78621D", "#784F1D", "#1B2F38",

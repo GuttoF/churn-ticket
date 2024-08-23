@@ -5,6 +5,8 @@ services:
     ports:
       - "${API_PORT:-8000}:${API_PORT:-8000}"
     command: poetry run uvicorn src.api.main:app --host 0.0.0.0 --port ${API_PORT:-8000}
+    networks:
+      - streamlit-network
 
   streamlit:
     build:
@@ -14,4 +16,9 @@ services:
     command: poetry run streamlit run src/app/main.py
     depends_on:
       - api
+    networks:
+        - streamlit-network
+networks:
+    streamlit-network:
+        driver: bridge
 
