@@ -31,10 +31,10 @@ def run():
     **Matriz de Confusão**  
     A matriz de confusão é uma ferramenta que usamos para avaliar a performance do modelo de forma detalhada. Ela mostra como as previsões do modelo se comparam com os valores reais em termos de **quatro categorias**:
 
-    - **Verdadeiros Positivos (VP)**: O modelo previu corretamente que o cliente iria churn.
-    - **Falsos Positivos (FP)**: O modelo previu que o cliente iria churn, mas ele não churn.
-    - **Verdadeiros Negativos (VN)**: O modelo previu corretamente que o cliente não iria churn.
-    - **Falsos Negativos (FN)**: O modelo previu que o cliente não iria churn, mas ele churn.
+    - **Verdadeiros Positivos (VP)**: O modelo previu corretamente que o cliente iria entrar em churn.
+    - **Falsos Positivos (FP)**: O modelo previu que o cliente iria entrar em churn, mas ele não entrou.
+    - **Verdadeiros Negativos (VN)**: O modelo previu corretamente que o cliente não iria entrar em churn.
+    - **Falsos Negativos (FN)**: O modelo previu que o cliente não iria entrar em churn, mas ele entrou.
 
     Agora, você pode navegar pelo aplicativo para explorar os dados e fazer previsões com base nas informações inseridas.
     """)
