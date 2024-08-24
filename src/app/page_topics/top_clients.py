@@ -5,33 +5,25 @@ import plotly.express as px
 from pathlib import Path
 from utils.utils_fe_page import FeatureEngineering
 import os
+import concurrent.futures
 
-colors_list = [
-    "#1D5B79", "#1D7865", "#78621D", "#784F1D", "#1B2F38",
-    "#75CDBB", "#CDB875", "#CDA675", "#B7E2F7", "#E4FFF9",
-]
 
-def run():
-    st.title("Informações dos Top Clients")
-
-    path = Path().resolve().parent
-    # Local path
-    #data_path = path / "churn-ticket/data"
-    # Docker path
-    data_path = path / "app/data"
-    X_test = pd.read_parquet(data_path / "processed/X_test.parquet")
-
-    fe = FeatureEngineering()
-    X_test = fe._perform_transformations(X_test)
-
+def get_prediction(input_data):
     api_url = os.getenv("API_URL")
     if not api_url:
         raise ValueError("API_URL not found in environment variables")
 
+    response = requests.post(api_url, json=input_data)
+    if response.status_code == 200:
+        result = response.json()
+        return result
+    return None
+
+
+def process_batch(batch_df):
     predictions = []
     probabilities = []
-
-    for index, row in X_test.iterrows():
+    for index, row in batch_df.iterrows():
         input_data = {
             "credit_score": row["credit_score"],
             "geography": row["geography"],
@@ -44,21 +36,39 @@ def run():
             "is_active_member": row["is_active_member"],
             "estimated_salary": row["estimated_salary"]
         }
-
-        response = requests.post(api_url, json=input_data)
-        if response.status_code == 200:
-            result = response.json()
+        result = get_prediction(input_data)
+        if result:
             predictions.append(result['prediction'])
             probabilities.append(result['probability'])
         else:
             predictions.append(None)
             probabilities.append(None)
 
-    X_test['predict'] = predictions
-    X_test['predict_proba'] = probabilities
+    batch_df['predict'] = predictions
+    batch_df['predict_proba'] = probabilities
+    return batch_df
 
-    high_churn = X_test[X_test['predict'] == 1]
-    low_churn = X_test[X_test['predict'] == 0]
+
+def run():
+    st.title("Informações dos Top Clients")
+
+    path = Path().resolve().parent
+    data_path = path / "app/data"
+    X_test = pd.read_parquet(data_path / "processed/X_test.parquet")
+
+    fe = FeatureEngineering()
+    X_test = fe._perform_transformations(X_test)
+
+    batch_size = 100
+    batches = [X_test[i:i + batch_size] for i in range(0, X_test.shape[0], batch_size)]
+
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        results = list(executor.map(process_batch, batches))
+
+    X_test_processed = pd.concat(results)
+
+    high_churn = X_test_processed[X_test_processed['predict'] == 1]
+    low_churn = X_test_processed[X_test_processed['predict'] == 0]
 
     high_churn_count = len(high_churn)
     low_churn_count = len(low_churn)
@@ -91,7 +101,10 @@ def run():
         color="count",
         hover_name="geography",
         title="",
-        color_continuous_scale=colors_list,
+        color_continuous_scale=[
+            "#1D5B79", "#1D7865", "#78621D", "#784F1D", "#1B2F38",
+            "#75CDBB", "#CDB875", "#CDA675", "#B7E2F7", "#E4FFF9"
+        ],
         scope="europe",
     )
     fig1.update_geos(showcoastlines=False, showland=False, fitbounds="locations")
@@ -146,3 +159,8 @@ def run():
 
 if __name__ == "__main__":
     run()
+
+
+# New features:
+# 1. Batch processing for predictions
+# 2. Parallel processing for batch predictions

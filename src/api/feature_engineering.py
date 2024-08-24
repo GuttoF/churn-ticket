@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 import pickle
-from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
 
 
 def perform_transformations(dataframe: pd.DataFrame) -> pd.DataFrame:

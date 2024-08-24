@@ -8,6 +8,7 @@ app = FastAPI(
     version="1.0.0",
 )
 
+
 # Add GZip middleware
 app.add_middleware(GZipMiddleware, minimum_size=1000)
 

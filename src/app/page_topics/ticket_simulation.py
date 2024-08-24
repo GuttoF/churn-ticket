@@ -2,9 +2,50 @@ import streamlit as st
 import os
 from utils.utils_business_translation import get_churn_predictions_from_api, top_clients, knapsack_solver
 import pandas as pd
+import requests
+
+def get_prediction(input_data):
+    api_url = os.getenv("API_URL")
+    if not api_url:
+        raise ValueError("API_URL not found in environment variables")
+
+    response = requests.post(api_url, json=input_data)
+    if response.status_code == 200:
+        result = response.json()
+        return result
+    return None
+
+
+def process_batch(batch_df):
+    predictions = []
+    probabilities = []
+    for index, row in batch_df.iterrows():
+        input_data = {
+            "credit_score": row["credit_score"],
+            "geography": row["geography"],
+            "gender": row["gender"],
+            "age": row["age"],
+            "tenure": row["tenure"],
+            "balance": row["balance"],
+            "num_of_products": row["num_of_products"],
+            "has_cr_card": row["has_cr_card"],
+            "is_active_member": row["is_active_member"],
+            "estimated_salary": row["estimated_salary"]
+        }
+        result = get_prediction(input_data)
+        if result:
+            predictions.append(result['prediction'])
+            probabilities.append(result['probability'])
+        else:
+            predictions.append(None)
+            probabilities.append(None)
+
+    batch_df['predict'] = predictions
+    batch_df['predict_proba'] = probabilities
+    return batch_df
+
 
 def run():
-
     st.title(":moneybag: Simulação de Retenção de Clientes Utilizando Tickets")
 
     st.markdown("""
@@ -12,10 +53,11 @@ def run():
     - Retorno de 15% se o salário estimado for menor que a média;
     - Retorno de 20% se o salário estimado for igual à média e menor que duas vezes a média;
     - Retorno de 25% se o salário estimado for igual ou maior que duas vezes a média;
-    
+
     Com isso obtemos as seguintes informações:
-    
+
     """)
+
     api_url = os.getenv("API_URL")
     if not api_url:
         raise ValueError("API_URL not found in environment variables")
@@ -64,7 +106,8 @@ def run():
     incentives_list = st.sidebar.text_input("Lista de Incentivos (separados por vírgula)", "200,100,50")
     incentives_list = list(map(int, incentives_list.split(',')))
 
-    investment_value = st.sidebar.number_input("Valor de Investimento para Ambos os Cenários", min_value=1000, max_value=100000, value=10000)
+    investment_value = st.sidebar.number_input("Valor de Investimento para Ambos os Cenários", min_value=1000,
+                                               max_value=100000, value=10000)
 
     simulation_1 = top_clients(
         scenario_name="Cenário 1",
@@ -127,9 +170,8 @@ def run():
         - **Como foi calculada?**: Dividimos o "Lucro" total pelo "Investimento" total e multiplicamos por 100 para obter a porcentagem.
 
     5. **Redução do Churn (%):**
-        - **O que é?**: Essa métrica indica a porcentagem de redução no churn, ou seja, quanto conseguimos reduzir a saída de clientes com nossas ações.
-        - **Como foi calculada?**: Calculamos a porcentagem de clientes que estavam prestes a churnar, mas que foram retidos com sucesso, em relação ao número total de clientes com probabilidade de churn.
-    """)
+        - **O que é?**: Essa métrica indica a porcentagem de redução no churn, ou seja, quanto conseguimos reduzir a saída de clientes com nossas ações
+        """)
 
 if __name__ == "__main__":
     run()

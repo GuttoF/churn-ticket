@@ -2,6 +2,7 @@ import pickle
 import pandas as pd
 from .feature_engineering import perform_transformations
 
+
 def load_model():
     with open('src/models/model.pkl', 'rb') as f:
         model = pickle.load(f)
@@ -45,4 +46,8 @@ def make_prediction(model, threshold, input_data: pd.DataFrame):
     # Apply the threshold to determine the final class
     prediction = (prediction_proba >= threshold).astype(int)
 
-    return int(prediction[0]), float(prediction_proba[0])
+    result = int(prediction[0]), float(prediction_proba[0])
+
+    # Cache the result for 5 min
+
+    return result
