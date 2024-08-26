@@ -1,31 +1,38 @@
-import streamlit as st
-import pandas as pd
-import duckdb
 from pathlib import Path
+
+import duckdb
+import pandas as pd
+import streamlit as st
 from utils.utils_eda_page import DataVisualizer
-from utils.utils_fe_page import FeatureEngineering
+from utils.utils_fe_page import FeatureEngineering as fe
+
 
 def text_step(subheader: str, markdown: str):
+    """
+    Display the subheader and markdown text for each hypothesis.
+
+    Parameters:
+    - subheader (str): Subheader text.
+    - markdown (str): Markdown text.
+    """
+    
     st.subheader(f"Hipótese {subheader}")
     st.markdown(markdown)
+
 
 def run():
     st.title("Análise Exploratória de Dados (EDA)")
 
-    # Ler o DataFrame
-    path = Path().resolve().parent
-    # Local path
-    #data_path = path / "churn-ticket/data/interim"
-    # Docker path
-    data_path = path / "app/data/interim"
-    conn_path = str(data_path / "churn.db")
+    current_path = Path(__file__)
+    data_path = current_path.parents[3] / "data" / "interim" / "churn.db"
+    conn_path = str(data_path)
+
     conn = duckdb.connect(database=conn_path, read_only=False)
     query = conn.execute("SELECT * FROM churn")
     df = pd.DataFrame(query.fetchdf())
     conn.close()
 
-    fe = FeatureEngineering()
-    df = fe._perform_transformations(df)
+    df = fe.perform_transformations(df)
 
     eda = DataVisualizer(df)
 
@@ -59,13 +66,17 @@ def run():
     text_step(h6_sub, h6_mark)
     eda.hypotheses_6()
 
-    h7_sub = "7: Clientes com saldos mais altos têm maior probabilidade de sair do banco."
+    h7_sub = (
+        "7: Clientes com saldos mais altos têm maior probabilidade de sair do banco."
+    )
     h7_mark = "**Verdadeiro** Clientes com saldos mais altos têm maior probabilidade de sair do banco."
     text_step(h7_sub, h7_mark)
     eda.hypotheses_7()
 
     h8_sub = "8: Clientes mais velhos têm maior probabilidade de ter cartão de crédito."
-    h8_mark = "**Falso** A maioria dos clientes têm cartão de crédito, independente da idade."
+    h8_mark = (
+        "**Falso** A maioria dos clientes têm cartão de crédito, independente da idade."
+    )
     text_step(h8_sub, h8_mark)
     eda.hypotheses_8()
 
@@ -80,6 +91,7 @@ def run():
 
     Essas informações podem ser usadas para melhorar as estratégias de retenção de clientes e ajustar o foco das campanhas de marketing.
     """)
+
 
 if __name__ == "__main__":
     run()

@@ -1,15 +1,15 @@
-import requests
-import pandas as pd
 from pathlib import Path
+import requests
 import duckdb
+import pandas as pd
+import streamlit as st
 from utils.utils_fe_page import FeatureEngineering
 
+
+@st.cache_resource(show_spinner=False)
 def get_churn_predictions_from_api(api_url: str):
-    path = Path().resolve().parent
-    # Local path
-    #data_path = path / "churn-ticket/data"
-    # Docker path
-    data_path = path / "app/data"
+    current_path = Path(__file__)
+    data_path = current_path.parents[3] / "data"
 
     conn_path = str(data_path / "interim/churn.db")
     conn = duckdb.connect(database=conn_path, read_only=False)
@@ -23,7 +23,7 @@ def get_churn_predictions_from_api(api_url: str):
     X_test = pd.read_parquet(data_path / "processed/X_test.parquet")
 
     fe = FeatureEngineering()
-    X_test = fe._perform_transformations(X_test)
+    X_test = fe.perform_transformations(X_test)
 
     y_test = pd.read_pickle(data_path / "processed/y_test.pkl")
 
@@ -41,21 +41,21 @@ def get_churn_predictions_from_api(api_url: str):
             "num_of_products": row["num_of_products"],
             "has_cr_card": row["has_cr_card"],
             "is_active_member": row["is_active_member"],
-            "estimated_salary": row["estimated_salary"]
+            "estimated_salary": row["estimated_salary"],
         }
 
         response = requests.post(api_url, json=input_data)
         if response.status_code == 200:
             result = response.json()
-            predictions.append(result['prediction'])
-            probabilities.append(result['probability'])
+            predictions.append(result["prediction"])
+            probabilities.append(result["probability"])
         else:
             predictions.append(None)
             probabilities.append(None)
 
     # Create a DataFrame for the results
-    y_hat = pd.DataFrame(predictions, columns=['prediction'])
-    y_hat_proba = pd.DataFrame(probabilities, columns=['probability'])
+    y_hat = pd.DataFrame(predictions, columns=["prediction"])
+    y_hat_proba = pd.DataFrame(probabilities, columns=["probability"])
 
     def return_per_client():
         df_raw["estimated_salary_regular"] = estimated_salary
@@ -112,7 +112,6 @@ def top_clients(
     probability: str,
     prediction: str,
     clients_return: str,
-    churn_loss: float,
     number_of_clients: int,
     incentive_value: float,
     max_investment: float,
@@ -152,18 +151,19 @@ def top_clients(
 
     top_value["profit"] = top_value["recover"] - top_value["incentive"]
 
-    recovered_revenue = round(top_value["recover"].sum(), 2)
 
     roi = round(top_value["profit"].sum() / total_incentive * 100, 2)
 
     churn_reduction = round(
-        len(top_value[(top_value[prediction] == 1) & (top_value["exited"] == 1)]) / number_of_clients * 100, 2
+        len(top_value[(top_value[prediction] == 1) & (top_value["exited"] == 1)])
+        / number_of_clients
+        * 100,
+        2,
     )
 
     dataframe = pd.DataFrame(
         {
             "Cenário": scenario_name,
-            "Receita Recuperada": f"€{recovered_revenue}",
             "Investimento": f"€{total_incentive:.2f}",
             "Lucro": f"€{top_value['profit'].sum():.2f}",
             "ROI": f"{roi}%",
@@ -174,13 +174,13 @@ def top_clients(
 
     return dataframe
 
+
 def knapsack_solver(
     scenario_name: str,
     data: pd.DataFrame,
     probability: str,
     prediction: str,
     clients_return: str,
-    churn_loss: float,
     number_of_clients: int,
     W: int,
     incentive_value: str,
@@ -250,18 +250,24 @@ def knapsack_solver(
     )
     selected_data["profit"] = selected_data["recover"] - selected_data[incentive_value]
 
-    recovered_revenue = round(selected_data["recover"].sum(), 2)
-
-    roi = round(selected_data["profit"].sum() / selected_data[incentive_value].sum() * 100, 2)
+    roi = round(
+        selected_data["profit"].sum() / selected_data[incentive_value].sum() * 100, 2
+    )
 
     churn_reduction = round(
-        len(selected_data[(selected_data[prediction] == 1) & (selected_data["exited"] == 1)]) / number_of_clients * 100, 2
+        len(
+            selected_data[
+                (selected_data[prediction] == 1) & (selected_data["exited"] == 1)
+            ]
+        )
+        / number_of_clients
+        * 100,
+        2,
     )
 
     dataframe = pd.DataFrame(
         {
             "Cenário": scenario_name,
-            "Receita Recuperada": f"€{recovered_revenue}",
             "Investimento": f"€{selected_data[incentive_value].sum():.2f}",
             "Lucro": f"€{selected_data['profit'].sum():.2f}",
             "ROI": f"{roi}%",

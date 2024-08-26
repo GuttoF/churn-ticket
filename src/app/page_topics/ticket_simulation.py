@@ -1,13 +1,20 @@
-import streamlit as st
 import os
-from utils.utils_business_translation import get_churn_predictions_from_api, top_clients, knapsack_solver
+
 import pandas as pd
 import requests
+import streamlit as st
+from utils.utils_business_translation import (
+    get_churn_predictions_from_api,
+    knapsack_solver,
+    top_clients,
+)
+
 
 def get_prediction(input_data):
     api_url = os.getenv("API_URL")
-    if not api_url:
-        raise ValueError("API_URL not found in environment variables")
+    # api_url = "http://localhost:8000/predict"
+    # if not api_url:
+    #    raise ValueError("API_URL not found in environment variables")
 
     response = requests.post(api_url, json=input_data)
     if response.status_code == 200:
@@ -30,18 +37,18 @@ def process_batch(batch_df):
             "num_of_products": row["num_of_products"],
             "has_cr_card": row["has_cr_card"],
             "is_active_member": row["is_active_member"],
-            "estimated_salary": row["estimated_salary"]
+            "estimated_salary": row["estimated_salary"],
         }
         result = get_prediction(input_data)
         if result:
-            predictions.append(result['prediction'])
-            probabilities.append(result['probability'])
+            predictions.append(result["prediction"])
+            probabilities.append(result["probability"])
         else:
             predictions.append(None)
             probabilities.append(None)
 
-    batch_df['predict'] = predictions
-    batch_df['predict_proba'] = probabilities
+    batch_df["predict"] = predictions
+    batch_df["predict_proba"] = probabilities
     return batch_df
 
 
@@ -59,14 +66,23 @@ def run():
     """)
 
     api_url = os.getenv("API_URL")
+    # api_url = "http://localhost:8000/predict"
     if not api_url:
         raise ValueError("API_URL not found in environment variables")
 
-    return_clients, churn_loss, total_return, df_simulation = get_churn_predictions_from_api(api_url)
+    return_clients, churn_loss, total_return, df_simulation = (
+        get_churn_predictions_from_api(api_url)
+    )
 
-    result_return_clients = f"€{return_clients:,.2f}".replace(',', 'X').replace('.', ',').replace('X', '.')
-    result_churn_loss = f"€{churn_loss:,.2f}".replace(',', 'X').replace('.', ',').replace('X', '.')
-    result_total_return = f"{total_return:,.2f}%".replace(',', 'X').replace('.', ',').replace('X', '.')
+    result_return_clients = (
+        f"€{return_clients:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+    )
+    result_churn_loss = (
+        f"€{churn_loss:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+    )
+    result_total_return = (
+        f"{total_return:,.2f}%".replace(",", "X").replace(".", ",").replace("X", ".")
+    )
 
     st.metric("Retorno Total Estimado", result_return_clients)
     st.metric("Perda de Churn", result_churn_loss)
@@ -90,24 +106,55 @@ def run():
 
     st.write(
         """
-        Usando o problema da mochila com probabilidades e um orçamento:
+        Usando o problema da mochila com probabilidades e um orçamento de exemplo:
 
-        - p(churn) >= Altíssima(ex: 0,95): Cliente que irá sair.
-        - Alta(ex: 0,85) >= p(churn) < Altíssima: Cliente com alta probabilidade de ficar com um cupom de alto valor.
-        - Média(ex: 0,70) >= p(churn) < Alta: Cliente que pode ficar com um cupom de $100.
-        - Abaixo da média >= p(churn) < Média: Cliente que pode ficar com um cupom de $50.
+        - p(churn) >= Altíssima(ex: 0,95): Altíssima: Cliente com alta probabilidade de ficar com um cupom de alto valor.
+        - Alta(ex: 0,85) >= p(churn) < Alta: Cliente que pode ficar com um cupom de valor médio.
+        - Média(ex: 0,70) >= p(churn) < Média: Cliente que pode ficar com um cupom de valor baixo.
+        - Abaixo da média >= p(churn) < Abaixo da média: Cliente que pode ficar sem cupom.
         """
     )
 
     st.sidebar.subheader("Simulação")
 
-    top_n = st.sidebar.number_input("Quantidade de Clientes no Top", min_value=10, max_value=500, value=20, step=10)
+    top_n_options = [10, 15, 20, 25, 30, 35, 40, 45, 50]
+    top_n = st.sidebar.selectbox(
+        "Quantidade de Clientes no Top", top_n_options, index=2
+    )
 
-    incentives_list = st.sidebar.text_input("Lista de Incentivos (separados por vírgula)", "200,100,50")
-    incentives_list = list(map(int, incentives_list.split(',')))
+    higher_prob = st.sidebar.slider(
+        "Limite de Probabilidade Altíssima",
+        min_value=0.5,
+        max_value=1.0,
+        value=0.95,
+        step=0.01,
+    )
+    high_prob = st.sidebar.slider(
+        "Limite de Probabilidade Alta",
+        min_value=0.5,
+        max_value=1.0,
+        value=0.90,
+        step=0.01,
+    )
+    medium_prob = st.sidebar.slider(
+        "Limite de Probabilidade Média",
+        min_value=0.5,
+        max_value=1.0,
+        value=0.70,
+        step=0.01,
+    )
 
-    investment_value = st.sidebar.number_input("Valor de Investimento para Ambos os Cenários", min_value=1000,
-                                               max_value=100000, value=10000)
+    incentives_list = st.sidebar.text_input(
+        "Lista de Incentivos (separados por vírgula)", "200,100,50"
+    )
+    incentives_list = list(map(int, incentives_list.split(",")))
+
+    investment_value = st.sidebar.number_input(
+        "Valor de Investimento para Ambos os Cenários",
+        min_value=1000,
+        max_value=100000,
+        value=10000,
+    )
 
     simulation_1 = top_clients(
         scenario_name="Cenário 1",
@@ -115,18 +162,21 @@ def run():
         probability="probability",
         prediction="prediction",
         clients_return="financial_return",
-        churn_loss=churn_loss,
         number_of_clients=top_n,
         incentive_value=investment_value / top_n,
-        max_investment=investment_value
+        max_investment=investment_value,
     )
 
     df_simulation_2 = df_simulation[df_simulation["prediction"] == 1].copy()
 
     incentives = [
-        incentives_list[0] if row["probability"] >= 0.95 else
-        incentives_list[1] if 0.90 <= row["probability"] < 0.95 else
-        incentives_list[2]
+        incentives_list[0]
+        if row["probability"] >= higher_prob
+        else incentives_list[1]
+        if high_prob <= row["probability"] < higher_prob
+        else incentives_list[2]
+        if medium_prob <= row["probability"] < high_prob
+        else 0  # No incentive
         for _, row in df_simulation_2.iterrows()
     ]
     df_simulation_2["incentive"] = incentives
@@ -137,11 +187,10 @@ def run():
         probability="probability",
         prediction="prediction",
         clients_return="financial_return",
-        churn_loss=churn_loss,
         number_of_clients=top_n,
         W=investment_value,
         incentive_value="incentive",
-        max_investment=investment_value
+        max_investment=investment_value,
     )
 
     compare_df = pd.concat([simulation_1, simulation_2], axis=0)
@@ -153,25 +202,22 @@ def run():
     st.markdown("""
     ### Explicação das Métricas
 
-    1. **Receita Recuperada:**
-        - **O que é?**: A receita recuperada representa o valor total que conseguimos salvar ao evitar que clientes propensos a churn realmente saiam.
-        - **Como foi calculada?**: Para cada cliente, calculamos o retorno financeiro esperado se ele permanecer no banco. Somamos o retorno de todos os clientes que foram corretamente identificados como churners e que, com as ações de retenção, permaneceram.
-
-    2. **Investimento:**
+    1. **Investimento:**
         - **O que é?**: É o total de dinheiro que decidimos investir em incentivos para reter os clientes mais propensos a churn.
         - **Como foi calculada?**: É a soma dos incentivos financeiros oferecidos a cada cliente selecionado para retenção.
 
-    3. **Lucro:**
+    2. **Lucro:**
         - **O que é?**: O lucro representa o valor que conseguimos "ganhar" após subtrair o custo dos incentivos oferecidos da receita recuperada.
         - **Como foi calculada?**: Para cada cliente, subtraímos o valor do incentivo do retorno financeiro que ele gerou, e depois somamos esses valores para todos os clientes.
 
-    4. **ROI (%):**
+    3. **ROI (%):**
         - **O que é?**: O Retorno sobre Investimento (ROI) mostra o quanto ganhamos em relação ao que investimos em retenção, expresso em porcentagem.
         - **Como foi calculada?**: Dividimos o "Lucro" total pelo "Investimento" total e multiplicamos por 100 para obter a porcentagem.
 
-    5. **Redução do Churn (%):**
+    4. **Redução do Churn (%):**
         - **O que é?**: Essa métrica indica a porcentagem de redução no churn, ou seja, quanto conseguimos reduzir a saída de clientes com nossas ações
         """)
+
 
 if __name__ == "__main__":
     run()

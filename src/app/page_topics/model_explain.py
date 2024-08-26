@@ -1,10 +1,34 @@
-import streamlit as st
+import pickle
 from pathlib import Path
 
-# Local path
-#pic_path = Path().resolve().parent / "churn-ticket" / "pics" / "model_result.png"
-# Docker path
-pic_path = Path().resolve().parent / "app" / "pics" / "model_result.png"
+import pandas as pd
+import streamlit as st
+from utils.utils_model_explain import model_plot
+
+# Paths
+current_path = Path(__file__)
+X_test_path = current_path.parents[3] / "data" / "processed" / "X_test_fs.parquet"
+y_test_path = current_path.parents[3] / "data" / "processed" / "y_test.pkl"
+model_path = current_path.parents[3] / "src" / "models" / "model.pkl"
+threshold_path = current_path.parents[3] / "src" / "models" / "threshold.pkl"
+
+# Load model and threshold
+with open(model_path, "rb") as model_file:
+    model = pickle.load(model_file)
+
+with open(threshold_path, "rb") as threshold_file:
+    threshold = pickle.load(threshold_file)
+
+# Load data
+X_test = pd.read_parquet(X_test_path)
+
+with open(y_test_path, "rb") as y_test_file:
+    y_test = pickle.load(y_test_file)
+
+
+# Plot
+fig = model_plot(model, X_test, y_test, threshold)
+
 
 def run():
     st.title(":thinking_face: Explicação do Modelo")
@@ -39,16 +63,16 @@ def run():
 
     st.subheader("Resultados do Modelo")
 
-    st.image(str(pic_path), use_column_width=True)
+    st.plotly_chart(fig)
 
     st.markdown("""
     **Verdadeiros Positivos (VP = 324):**  
     O modelo identificou corretamente 324 clientes que realmente fizeram churn (ou seja, o modelo previu churn e o cliente realmente deixou o banco). Isso é positivo, pois esses são os clientes que você quer identificar para possíveis ações de retenção.
     
-    **Falsos Positivos (FP = 390):**  
-    O modelo previu que 390 clientes fariam churn, mas esses clientes, na realidade, não deixaram o banco. Isso pode ser um problema, dependendo do impacto de tomar ações de retenção em clientes que não estavam propensos a churnar. No entanto, esses falsos positivos podem ser menos problemáticos se as ações de retenção forem de baixo custo ou se o objetivo principal for garantir que nenhum cliente importante seja perdido.
+    **Falsos Positivos (FP = 370):**  
+    O modelo previu que 370 clientes fariam churn, mas esses clientes, na realidade, não deixaram o banco. Isso pode ser um problema, dependendo do impacto de tomar ações de retenção em clientes que não estavam propensos a churn. No entanto, esses falsos positivos podem ser menos problemáticos se as ações de retenção forem de baixo custo ou se o objetivo principal for garantir que nenhum cliente importante seja perdido.
     
-    **Verdadeiros Negativos (VN = 1203):**  
+    **Verdadeiros Negativos (VN = 1223):**  
     O modelo corretamente identificou 1203 clientes que não fizeram churn (o modelo previu "não churn" e o cliente realmente permaneceu). Isso mostra que o modelo tem uma boa capacidade de identificar clientes fiéis.
     
     **Falsos Negativos (FN = 83):**  
@@ -57,13 +81,12 @@ def run():
     ### Por que esse resultado pode ser considerado bom?
     
     - **Alto Número de Verdadeiros Positivos e Verdadeiros Negativos:**  
-      A maioria das previsões feitas pelo modelo são corretas, indicando uma boa performance geral. Um número relativamente alto de verdadeiros positivos (324) e verdadeiros negativos (1203) sugere que o modelo é eficaz em identificar corretamente os clientes churn e não churn.
+      A maioria das previsões feitas pelo modelo são corretas, indicando uma boa performance geral. Um número relativamente alto de verdadeiros positivos (324) e verdadeiros negativos (1223) sugere que o modelo é eficaz em identificar corretamente os clientes churn e não churn.
     
     - **Baixo Número de Falsos Negativos:**  
-      O número de falsos negativos (83) é relativamente baixo comparado ao número total de clientes, o que significa que o modelo é capaz de identificar a maioria dos clientes que churnam, minimizando o risco de perda de clientes importantes sem ação de retenção.
+      O número de falsos negativos (83) é relativamente baixo comparado ao número total de clientes, o que significa que o modelo é capaz de identificar a maioria dos clientes que estão em churn, minimizando o risco de perda de clientes importantes sem ação de retenção.
 
     """)
-
 
 
 if __name__ == "__main__":

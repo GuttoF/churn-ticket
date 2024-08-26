@@ -1,5 +1,6 @@
 import streamlit as st
 
+
 def run():
     st.title(":bank: Previsão de Churn da Top Bank")
 

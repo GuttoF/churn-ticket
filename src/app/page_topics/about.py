@@ -1,5 +1,6 @@
 import streamlit as st
 
+
 def run():
     st.title("Sobre Mim")
     st.write("""
@@ -14,6 +15,7 @@ def run():
     
     Esse projeto está hospedado [aqui](https://github.com/GuttoF/churn-ticket).
     """)
+
 
 if __name__ == "__main__":
     run()

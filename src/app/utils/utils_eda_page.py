@@ -1,9 +1,14 @@
 import pandas as pd
-import streamlit as st
 import plotly.express as px
+import streamlit as st
 from plotly.subplots import make_subplots
 
+
 class DataVisualizer:
+    """
+    Class to visualize data for Exploratory Data Analysis (EDA).
+    """
+
     def __init__(self, data: pd.DataFrame):
         self.data = data
 
@@ -17,7 +22,8 @@ class DataVisualizer:
         "#CDB875",
         "#CDA675",
         "#B7E2F7",
-        "#E4FFF9",]
+        "#E4FFF9",
+    ]
 
     def hypotheses_1(self) -> None:
         credit_score_mean = self.data["credit_score"].mean()
@@ -253,7 +259,9 @@ class DataVisualizer:
         aux = self.data.groupby("tenure")["exited"].mean().reset_index()
 
         title = "Taxa de Churn por Tempo de Permanência (Tenure)<br>"
-        suptitle = "<sub>Existe uma relação entre <b>churn</b> e tempo de permanência?</sub>"
+        suptitle = (
+            "<sub>Existe uma relação entre <b>churn</b> e tempo de permanência?</sub>"
+        )
         info = title + suptitle
 
         aux.sort_values("tenure", ascending=True, inplace=True)

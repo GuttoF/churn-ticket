@@ -1,63 +1,38 @@
 import pickle
-from functools import lru_cache
-from io import StringIO
+from pathlib import Path
 
 import pandas as pd
-from fastapi import Depends
 
-from .feature_engineering import transform_data_inference
+from .feature_engineering import FeatureEngineering as fe
 
 model = None
 threshold = None
+
+# Paths
+current_path = Path(__file__)
+model_path = current_path.parents[2] / "src" / "models" / "model.pkl"
+threshold_path = current_path.parents[2] / "src" / "models" / "threshold.pkl"
 
 
 def load_model():
     global model
     if model is None:
-        with open("src/models/model.pkl", "rb") as f:
-            model = pickle.load(f)
+        with open(model_path, "rb") as model_file:
+            model = pickle.load(model_file)
     return model
 
 
 def load_threshold():
     global threshold
     if threshold is None:
-        with open("src/models/threshold.pkl", "rb") as f:
-            threshold = pickle.load(f)
+        with open(threshold_path, "rb") as threshold_file:
+            threshold = pickle.load(threshold_file)
     return threshold
 
 
-def get_model():
-    return load_model()
-
-
-def get_threshold():
-    return load_threshold()
-
-
-@lru_cache(maxsize=128)
-def cached_transformation(data: str):
-    dataframe = pd.read_json(StringIO(data))
-    transformed_data = transform_data_inference(dataframe)
-    return transformed_data
-
-
-def make_prediction(
-    input_data: pd.DataFrame, model=Depends(get_model), threshold=Depends(get_threshold)
-):
-    """
-    Make a prediction using a machine learning model.
-    Args:
-        input_data:
-        model:
-        threshold:
-
-    Returns:
-        A tuple containing the prediction (0 or 1) and the probability of the positive class
-    """
-
+def make_prediction(model, threshold, input_data: pd.DataFrame):
     # Apply feature engineering transformations
-    transformed_data = cached_transformation(input_data.to_json())
+    transformed_data = fe.transform_data_inference(input_data)
 
     # Guarantee that the columns are in the correct order and add missing columns with value 0
     correct_column_order = [
@@ -97,7 +72,6 @@ def make_prediction(
     ]
 
     # Add missing columns with value 0 to deal with NA values
-    # Add an if any NA values are present, print a warning message
     if transformed_data.isnull().values.any():
         transformed_data.fillna(0, inplace=True)
 
@@ -110,4 +84,4 @@ def make_prediction(
     # Apply the threshold to determine the final class
     prediction = (prediction_proba >= threshold).astype(int)
 
-    return int(prediction[0]), float(round(prediction_proba[0], 2))
+    return int(prediction[0]), float(prediction_proba[0])

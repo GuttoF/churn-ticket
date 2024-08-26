@@ -147,28 +147,6 @@ class FeatureEngineering:
 
         return dataframe
 
-    @staticmethod
-    def report_na(dataframe: pd.DataFrame) -> logging.info:
-        """
-        Reports the number of missing values (NA) in each column of the given dataframe.
-
-        Args:
-            dataframe (pd.DataFrame): The dataframe to check for missing values.
-
-        Returns:
-            logging.info: A message indicating the number of missing values in each column.
-        """
-        if not isinstance(dataframe, pd.DataFrame):
-            logging.error("Input is not a pandas DataFrame.")
-            return
-
-        for column in dataframe.columns:
-            na_count = dataframe[column].isna().sum()
-            if na_count > 0:
-                return logging.info(
-                    f"There are {na_count} NA in the '{column}' column."
-                )
-        return logging.info("There are no NA values in any column.")
 
     @staticmethod
     def get_profile_report(dataframe: pd.DataFrame, path: str) -> None:
