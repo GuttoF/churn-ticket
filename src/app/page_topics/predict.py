@@ -1,6 +1,6 @@
 import requests
 import streamlit as st
-
+import os
 
 def run():
     st.title(":robot_face: Previsão de Churn")
