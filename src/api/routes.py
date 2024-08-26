@@ -1,9 +1,11 @@
+import pandas as pd
 from fastapi import APIRouter
 from pydantic import BaseModel
-from src.api.services import load_model, load_threshold, make_prediction
-import pandas as pd
+
+from src.api.services import get_model, get_threshold, make_prediction
 
 router = APIRouter()
+
 
 # Pydantic BaseModel
 class PredictionInput(BaseModel):
@@ -18,9 +20,11 @@ class PredictionInput(BaseModel):
     is_active_member: int
     estimated_salary: float
 
+
 # Load threshold and begin API
-model = load_model()
-threshold = load_threshold()
+model = get_model()
+threshold = get_threshold()
+
 
 @router.post("/predict")
 def predict(input_data: PredictionInput):

@@ -10,7 +10,7 @@ app = FastAPI(
 
 
 # Add GZip middleware
-app.add_middleware(GZipMiddleware, minimum_size=1000)
+app.add_middleware(GZipMiddleware)
 
 # Include the router
 app.include_router(router)

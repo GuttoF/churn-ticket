@@ -1,0 +1,34 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: src/api/Dockerfile
+    container_name: churn-ticket-api
+    ports:
+      - "8000:8000"
+    networks:
+      - churn-ticket-net
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+
+  app:
+    build:
+      context: .
+      dockerfile: src/app/Dockerfile
+    container_name: churn-ticket-app
+    ports:
+      - "8501:8501"
+    networks:
+      - churn-ticket-net
+    environment:
+      - API_URL=http://api:8000/predict
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    depends_on:
+      - api
+
+networks:
+  churn-ticket-net:
+    driver: bridge
