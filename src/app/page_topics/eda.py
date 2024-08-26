@@ -15,7 +15,7 @@ def text_step(subheader: str, markdown: str):
     - subheader (str): Subheader text.
     - markdown (str): Markdown text.
     """
-    
+
     st.subheader(f"Hipótese {subheader}")
     st.markdown(markdown)
 
@@ -51,7 +51,7 @@ def run():
     text_step(h3_sub, h3_mark)
     eda.hypotheses_3()
 
-    h4_sub = "4: Os homens têm maior probabilidade de serem membros activos do que as mulheres."
+    h4_sub = "4: Os homens têm maior probabilidade de serem membros ativos do que as mulheres."
     h4_mark = "**Verdadeiro** Em um pouco de diferença, os homens são mais propensos a serem membros ativos"
     text_step(h4_sub, h4_mark)
     eda.hypotheses_4()
