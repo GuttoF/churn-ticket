@@ -44,11 +44,11 @@ def run():
     O modelo foi treinado usando dados históricos de clientes, incluindo informações como pontuação de crédito, saldo, número de produtos adquiridos, e outras características. A partir desses dados, o modelo aprendeu a identificar padrões que indicam uma maior probabilidade de churn.
 
     **Métrica Utilizada: Recall**  
-    A métrica principal utilizada para avaliar o desempenho do modelo é o **recall**. O recall é uma medida que nos diz a capacidade do modelo em identificar corretamente os clientes que realmente irão churn.  
+    A métrica principal utilizada para avaliar o desempenho do modelo é o **recall**. O recall é uma medida que nos diz a capacidade do modelo em identificar corretamente os clientes que realmente irão entrar em churn.  
     Imagine que o modelo tem que escolher entre muitos clientes quais deles irão sair do banco. O recall nos mostra, entre todos os clientes que realmente cancelaram, quantos deles o modelo conseguiu prever corretamente. É uma métrica muito importante quando queremos minimizar a chance de perder clientes que poderiam ser retidos. O resultado do recall foi de **77,6%**, considerado como um valor satisfatório.
 
     **Curva ROC e AUC**  
-    Outra ferramenta que usamos para avaliar o modelo é a **Curva ROC** (Receiver Operating Characteristic). Essa curva nos mostra como o modelo se comporta ao tentar distinguir entre clientes que irão churn e os que não irão.  
+    Outra ferramenta que usamos para avaliar o modelo é a **Curva ROC** (Receiver Operating Characteristic). Essa curva nos mostra como o modelo se comporta ao tentar distinguir entre clientes que irão entrar em churn e os que não irão.  
     A curva ROC traça a taxa de verdadeiros positivos (clientes corretamente identificados como churn) contra a taxa de falsos positivos (clientes incorretamente identificados como churn).  
     Um bom modelo terá uma curva ROC que se aproxima do canto superior esquerdo do gráfico. A área sob a curva ROC, conhecida como **AUC** (Area Under the Curve), nos dá uma ideia geral de quão bem o modelo está separando as duas classes (churn e não churn). Quanto mais próxima de 1 for a AUC, melhor o modelo.
 

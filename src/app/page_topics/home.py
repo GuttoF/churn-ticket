@@ -28,7 +28,7 @@ def run():
         - **balance**: O valor que o cliente tem em sua conta;
         - **num_of_products**: A quantidade de produtos que o cliente comprou;
         - **has_cr_card**: Se o cliente tiver cartão de crédito;
-        - **isActiveMember**: Se o cliente estiver ativo (nos últimos 12 meses);
+        - **is_active_member**: Se o cliente estiver ativo (nos últimos 12 meses);
         - **estimated_salary**: Estimativa do salário anual dos clientes;
         - **exited**: Se o cliente for um churn (*variável alvo*)
         """
