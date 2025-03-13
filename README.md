@@ -154,6 +154,102 @@ Run tests using `pytest`:
 poetry run pytest
 ```
 
+## Kubernetes Deployment
+
+### Requirements
+
+- Kubernetes cluster (version 1.19+)
+- kubectl CLI tool
+- Docker (for building images)
+
+### Environment Setup
+
+Ensure your `kubectl` is configured to interact with your Kubernetes cluster:
+
+```bash
+kubectl cluster-info
+```
+
+### Deployment Instructions
+
+1. **Build and push Docker images** (if not using pre-built images):
+
+   ```bash
+   docker build -t guttofranca/churn-ticket-api:latest -f src/api/Dockerfile .
+   docker build -t guttofranca/churn-ticket-app:latest -f src/app/Dockerfile .
+
+   docker push guttofranca/churn-ticket-api:latest
+   docker push guttofranca/churn-ticket-app:latest
+   ```
+
+2. **Apply Kubernetes configurations:**
+
+   ```bash
+   kubectl apply -f kubernetes/
+   ```
+
+3. **Verify deployments:**
+
+   ```bash
+   kubectl get deployments
+   kubectl get pods
+   kubectl get services
+   ```
+
+### Accessing the Services
+
+#### API Service
+
+```bash
+kubectl get service churn-api-service
+```
+
+Note the external IP or NodePort for accessing the API.
+
+#### Streamlit App
+
+```bash
+kubectl get service churn-app-service
+```
+
+Note the external IP or NodePort for accessing the Streamlit app.
+
+#### Access the services
+
+- **API:** `http://<API-EXTERNAL-IP>:8000`
+- **Streamlit App:** `http://<APP-EXTERNAL-IP>:8501`
+
+Replace `<API-EXTERNAL-IP>` and `<APP-EXTERNAL-IP>` with the actual external IPs provided by your Kubernetes cluster.
+
+### Troubleshooting
+
+- **Check pod logs:**
+
+  ```bash
+  kubectl logs <pod-name>
+  ```
+
+- **Describe resources for more details:**
+
+  ```bash
+  kubectl describe pod <pod-name>
+  kubectl describe service <service-name>
+  ```
+
+- **For persistent issues, check Kubernetes events:**
+
+  ```bash
+  kubectl get events --sort-by=.metadata.creationTimestamp
+  ```
+
+- **Ensure services are of type LoadBalancer or NodePort to be accessible externally:**
+
+  ```bash
+  kubectl get services
+  ```
+
+For more detailed information on Kubernetes concepts and usage, refer to the [official Kubernetes documentation](https://kubernetes.io/docs/).
+
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
