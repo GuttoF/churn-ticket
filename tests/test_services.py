@@ -20,13 +20,10 @@ def input_data():
 
 
 def test_make_prediction(input_data):
-    # Load the model and threshold
     model = load_model()
     threshold = load_threshold()
 
-    # Make the prediction
     prediction, prediction_proba = make_prediction(model, threshold, input_data)
 
-    # Verify if the prediction is correct
     assert prediction == 0
     assert 0 <= prediction_proba <= 1  # The probability should be between 0 and 1
