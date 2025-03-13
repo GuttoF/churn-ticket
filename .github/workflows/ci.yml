@@ -30,9 +30,6 @@ jobs:
         path: |
           ~/.cache/pypoetry
           ~/.venv
-        key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-poetry-
 
     - name: Install Poetry
       run: |
