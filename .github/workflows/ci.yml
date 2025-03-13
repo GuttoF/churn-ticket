@@ -24,13 +24,6 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Cache Poetry dependencies
-      uses: actions/cache@v3
-      with:
-        path: |
-          ~/.cache/pypoetry
-          ~/.venv
-
     - name: Install Poetry
       run: |
         pip install poetry
