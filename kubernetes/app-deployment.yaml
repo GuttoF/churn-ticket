@@ -13,17 +13,17 @@ spec:
         app: churn-app
     spec:
       containers:
-      - name: churn-app
-        image: guttofranca/churn-ticket-app:latest
-        ports:
-        - containerPort: 8501
-        env:
-        - name: API_URL
-          value: "http://churn-api-service:8000/predict"
-        resources:
-          requests:
-            cpu: "200m"
-            memory: "512Mi"
-          limits:
-            cpu: "800m"
-            memory: "1024Mi"
+        - name: churn-app
+          image: guttofranca/churn-ticket-app:latest
+          ports:
+            - containerPort: 8501
+          env:
+            - name: API_URL
+              value: "http://churn-api-service:8000/predict"
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "512Mi"
+            limits:
+              cpu: "800m"
+              memory: "1024Mi"

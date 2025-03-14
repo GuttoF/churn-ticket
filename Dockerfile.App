@@ -15,8 +15,9 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 COPY src /app/src
 COPY main.py pyproject.toml uv.lock /app/
 
-RUN mkdir -p /app/data/processed
+RUN mkdir -p /app/data/processed /app/data/interim
 COPY data/processed/ /app/data/processed/
+COPY data/interim/ /app/data/interim/
 
 
 RUN --mount=type=cache,target=/root/.cache/uv \

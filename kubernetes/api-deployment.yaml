@@ -13,17 +13,17 @@ spec:
         app: churn-api
     spec:
       containers:
-      - name: churn-api
-        image: guttofranca/churn-ticket-api:latest
-        ports:
-        - containerPort: 8000
-        env:
-        - name: API_URL
-          value: "http://churn-api-service:8000"
-        resources:
-          requests:
-            cpu: "100m"
-            memory: "128Mi"
-          limits:
-            cpu: "500m"
-            memory: "512Mi"
+        - name: churn-api
+          image: guttofranca/churn-ticket-api:latest
+          ports:
+            - containerPort: 8000
+          env:
+            - name: API_URL
+              value: "http://churn-api-service:8000"
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
