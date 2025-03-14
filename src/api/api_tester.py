@@ -1,4 +1,5 @@
 import requests
+import os
 
 api_url = os.getenv("API_URL")
 #api_url = "http://127.0.0.1:8000/predict"
@@ -24,4 +25,4 @@ try:
     response_json = response.json()
     print(response_json)
 except requests.exceptions.JSONDecodeError:
-    print("Erro ao tentar decodificar a resposta como JSON")
+    print("Error in the decodification of de JSON")

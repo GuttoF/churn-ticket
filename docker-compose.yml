@@ -2,7 +2,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: src/api/Dockerfile
+      dockerfile: Dockerfile.Api
     container_name: churn-ticket-api
     ports:
       - "8000:8000"
@@ -15,7 +15,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: src/app/Dockerfile
+      dockerfile: Dockerfile.App
     container_name: churn-ticket-app
     ports:
       - "8501:8501"

@@ -31,7 +31,6 @@ def load_threshold():
 
 
 def make_prediction(model, threshold, input_data: pd.DataFrame):
-    # Apply feature engineering transformations
     transformed_data = fe.transform_data_inference(input_data)
 
     # Guarantee that the columns are in the correct order and add missing columns with value 0
@@ -71,17 +70,14 @@ def make_prediction(model, threshold, input_data: pd.DataFrame):
         "cs_category_medium",
     ]
 
-    # Add missing columns with value 0 to deal with NA values
     if transformed_data.isnull().values.any():
         transformed_data.fillna(0, inplace=True)
 
     # Reorganize the columns according to the correct order
     transformed_data = transformed_data[correct_column_order]
 
-    # Make the prediction
     prediction_proba = model.predict_proba(transformed_data)[:, 1]
 
-    # Apply the threshold to determine the final class
     prediction = (prediction_proba >= threshold).astype(int)
 
     return int(prediction[0]), float(prediction_proba[0])

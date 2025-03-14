@@ -5,7 +5,6 @@ import pandas as pd
 
 router = APIRouter()
 
-# Pydantic BaseModel
 class PredictionInput(BaseModel):
     credit_score: float
     geography: str
@@ -18,17 +17,14 @@ class PredictionInput(BaseModel):
     is_active_member: int
     estimated_salary: float
 
-# Load threshold and begin API
 model = load_model()
 threshold = load_threshold()
 
 @router.post("/predict")
 def predict(input_data: PredictionInput):
     try:
-        # Convert input data to DataFrame
         input_df = pd.DataFrame([input_data.model_dump()])
 
-        # Make prediction
         prediction, prediction_proba = make_prediction(model, threshold, input_df)
 
         return {"prediction": prediction, "probability": prediction_proba}
