@@ -347,6 +347,7 @@ dependencies = [
     { name = "catboost" },
     { name = "duckdb" },
     { name = "fastapi" },
+    { name = "graphviz" },
     { name = "gunicorn" },
     { name = "httpx" },
     { name = "pandas" },
@@ -364,6 +365,7 @@ dependencies = [
     { name = "sqlalchemy" },
     { name = "streamlit" },
     { name = "streamlit-extras" },
+    { name = "streamlit-mermaid" },
     { name = "uvicorn" },
 ]
 
@@ -393,6 +395,7 @@ requires-dist = [
     { name = "catboost", specifier = ">=1.2.7" },
     { name = "duckdb", specifier = ">=1.2.1" },
     { name = "fastapi", specifier = ">=0.115.11" },
+    { name = "graphviz", specifier = ">=0.20.3" },
     { name = "gunicorn", specifier = ">=23.0.0" },
     { name = "httpx", specifier = ">=0.28.1" },
     { name = "pandas", specifier = ">=2.2.3" },
@@ -410,6 +413,7 @@ requires-dist = [
     { name = "sqlalchemy", specifier = ">=2.0.39" },
     { name = "streamlit", specifier = ">=1.43.2" },
     { name = "streamlit-extras", specifier = ">=0.6.0" },
+    { name = "streamlit-mermaid", specifier = ">=0.2.0" },
     { name = "uvicorn", specifier = ">=0.34.0" },
 ]
 
@@ -3386,6 +3390,15 @@ sdist = { url = "https://files.pythonhosted.org/packages/88/25/d153babd6d8dff72e
 wheels = [
     { url = "https://files.pythonhosted.org/packages/14/ed/facce225c0d360b9bfa053c827029312e1b255e84d79320bda3539417b50/streamlit_keyup-0.3.0-py3-none-any.whl", hash = "sha256:ec7221617b1c832526db52859196c417578d6b4285942fbd10a0b2ff313899b3", size = 7493 },
 ]
+
+[[package]]
+name = "streamlit-mermaid"
+version = "0.2.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "streamlit" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/4b/d7/cfb2b1fdebc736cd22d31f5f87debf8550c3bf616ebd290a9c2bf7d7e0a6/streamlit-mermaid-0.2.0.tar.gz", hash = "sha256:a7883f63be991a378b2c327efae9a03ae49e830481659ae1a955bf68597f9c48", size = 3762617 }
 
 [[package]]
 name = "streamlit-toggle-switch"

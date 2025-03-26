@@ -1,5 +1,5 @@
 import streamlit as st
-from page_topics import home, model_explain, eda, predict, top_clients, ticket_simulation, about
+from page_topics import home, model_explain, eda, predict, top_clients, ticket_simulation, about, info
 
 st.set_page_config(page_title="Previsão de Churn da Top Bank",
                    page_icon=":bank:",
@@ -7,12 +7,13 @@ st.set_page_config(page_title="Previsão de Churn da Top Bank",
 
 PAGES = {
     "Home": home.run,
+    "Informações": info.run,
     "Explicação do Modelo": model_explain.run,
     "Análise Exploratória de Dados": eda.run,
     "Top Clients": top_clients.run,
     "Previsão de Churn": predict.run,
     "Simulação de Ticket": ticket_simulation.run,
-    "Sobre": about.run
+    "Sobre": about.run,
 }
 
 def main():
